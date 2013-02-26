@@ -41,6 +41,7 @@ namespace ButtonsSettings
         public int refreshKeys()
         {
             shellKeysList = getShellKeysArray();
+            shellKeyItems = getAllShellKeys();
             shellNewKeysList.Clear();
             foreach (ShellKeyItem ski in shellKeyItems)
             {
@@ -92,7 +93,7 @@ namespace ButtonsSettings
         public List<ShellKeyItem> getAllShellKeys()
         {
             //read all possible shellkeys
-            refreshKeys();
+            //refreshKeys();
             shellKeyItems.Clear();
             foreach (string s in _sKeyList)
             {
