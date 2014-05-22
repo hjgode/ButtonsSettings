@@ -31,6 +31,8 @@ namespace ButtonsSettings
                 if(ski.bFromReg)
                     comboBox1.Items.Add(ski);
             }
+            if(comboBox1.Items.Count>0)
+                comboBox1.SelectedIndex = 0;
         }
 
         private void mnuExit_Click(object sender, EventArgs e)
@@ -91,7 +93,11 @@ namespace ButtonsSettings
         {
             frmAddKey af = new frmAddKey(shKeys2.newKeysList);
             if (af.ShowDialog() == DialogResult.OK)
+            {
+                shKeys2.Dispose();
+                shKeys2 = new ShellKeys2();
                 readKeys();
+            }
             af.Dispose();
         }
 

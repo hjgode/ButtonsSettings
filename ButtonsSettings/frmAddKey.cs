@@ -30,7 +30,7 @@ namespace ButtonsSettings
         private void mnuOK_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.OK;
-            ShellKeyItem sk = new ShellKeyItem();
+            ShellKeyItem sk = new ShellKeyItem(comboBox1.SelectedItem.ToString());
             sk.ShellKeyValue = comboBox1.SelectedItem.ToString();
             sk.save2Reg();            
             this.Close();

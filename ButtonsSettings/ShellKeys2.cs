@@ -72,7 +72,7 @@ namespace ButtonsSettings
             List<ShellKeyItem> keyItems = new List<ShellKeyItem>();
             foreach (string s in _sKeyList)
             {
-                ShellKeyItem ski = new ShellKeyItem();
+                ShellKeyItem ski = new ShellKeyItem(s);
                 if (existsKey(s))
                 {
                     //read/set values
@@ -97,13 +97,13 @@ namespace ButtonsSettings
             shellKeyItems.Clear();
             foreach (string s in _sKeyList)
             {
-                ShellKeyItem ski = new ShellKeyItem();
+                ShellKeyItem ski = new ShellKeyItem(s);
                 if (existsKey(s))
                 {
                     //read/set values
                     ski.bFromReg = true;
                     ski.ShellKeyValue = s.ToUpper();
-                    ski.@default = readString(s, ""); ;
+                    ski.@default = readString(s, ""); 
                     ski.Flags = readInt(s, "Flags");
                     ski.Icon = readString(s, "Icon");
                     ski.@Name = readString(s, "Name");
@@ -159,6 +159,11 @@ namespace ButtonsSettings
             }
             return bRet;
         }
+
+        /// <summary>
+        /// return names of known app shellkeys from registry
+        /// </summary>
+        /// <returns>List of shell app key names</returns>
         public string[] getShellKeysArray()
         {
             string[] strings=null;
@@ -245,6 +250,7 @@ namespace ButtonsSettings
             return iRet;
         }
     }
+
     public class ShellKeyItem
     {
         public static string sMainSubKey = @"Software\Microsoft\Shell\Keys";
@@ -284,12 +290,21 @@ namespace ButtonsSettings
         public string ResetCmd = "";
         public string Icon = "\"\\Windows\\fexplore.exe\"";
         public string @Name = "AppKey";
-        public string @default = "\"\\Windows\\fexplore.exe\"";
+        public string @default = "\"\\Windows\\Start Menu\\Programs\\File Explorer.lnk\"";
+        public int BtnWnd = 0;
+        public string WndCls = "";
+
         /// <summary>
         /// one of the shell key values from 40C1 to 40C6
         /// </summary>
         public string ShellKeyValue = "40C1";
         public bool bFromReg = false;
+
+        public ShellKeyItem(String appIdx)
+        {
+            ShellKeyValue = appIdx;
+            @Name = "App " + ShellKeyValue.Substring(ShellKeyValue.Length - 1, 1);
+        }
 
         public bool save2Reg()
         {
@@ -299,6 +314,8 @@ namespace ButtonsSettings
             bRet += string2Reg("Name", @Name);
             bRet += string2Reg("", @default);
             bRet += int2Reg("Flags", Flags);
+            bRet += int2Reg("BtnWnd", BtnWnd);
+            bRet += string2Reg("WndCls", WndCls);
             return (bRet==0);
         }
 
@@ -350,6 +367,8 @@ namespace ButtonsSettings
             sb.Append("name='" + @Name + "'; ");
             sb.Append("resetcmd='" + ResetCmd + "'; ");
             sb.Append("icon='" + Icon + "'; ");
+            sb.Append("BtnWnd=" + BtnWnd.ToString() + "; ");
+            sb.Append("WndCls='" + WndCls + "'; ");
             //sb.Append("\r\n");
 
             return sb.ToString();
